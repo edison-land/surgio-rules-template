@@ -13,7 +13,7 @@
 **前提**：装 [Node.js ≥ 18](https://nodejs.org/)。
 
 ```bash
-git clone https://github.com/<你的用户名>/surgio-rules-template.git
+git clone https://github.com/edison-land/surgio-rules-template.git
 cd surgio-rules-template
 npm install
 
