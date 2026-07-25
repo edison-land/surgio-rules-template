@@ -1,0 +1,42 @@
+name: Generate configs
+
+# 可选：用 GitHub Actions 在云端生成配置，省得每次本地跑。
+#
+# ⚠️ 安全须知：
+#   生成出的 dist/ 里含有从你订阅解析出的「真实节点」，等同于你的机场账号。
+#   本流程只把结果作为「私有构件（artifact）」上传，仅你（仓库协作者）能下载，
+#   不会发布到任何公开地址。请勿改成推送到 GitHub Pages 等公开位置。
+#
+# 使用前：
+#   仓库 Settings → Secrets and variables → Actions → New repository secret
+#   新建 AIRPORT_SUBSCRIPTION_URL，值填你的订阅链接。
+
+on:
+  workflow_dispatch: {} # 手动触发
+  schedule:
+    - cron: '0 20 * * *' # 每天 UTC 20:00 = 北京时间 04:00 刷新一次远程规则
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm install
+
+      - name: Generate
+        run: npx surgio generate
+        env:
+          AIRPORT_SUBSCRIPTION_URL: ${{ secrets.AIRPORT_SUBSCRIPTION_URL }}
+
+      - name: Upload configs (private artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: configs
+          path: dist/
+          retention-days: 7
