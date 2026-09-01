@@ -6,7 +6,8 @@
   "private": false,
   "scripts": {
     "generate": "NODE_OPTIONS=\"--require ./dns-fix.js\" surgio generate",
-    "generate:nofix": "surgio generate"
+    "generate:nofix": "surgio generate",
+    "build:rules": "NODE_OPTIONS=\"--require ./dns-fix.js\" node scripts/build-rules.mjs"
   },
   "engines": {
     "node": ">=18"

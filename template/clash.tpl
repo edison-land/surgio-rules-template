@@ -86,8 +86,25 @@ proxy-groups:
   type: select
   proxies: ['🔰节点选择','🎯全球直连','🛑全球拦截','🇭🇰香港节点','🇺🇸美国节点','🇹🇼台湾节点','🇯🇵日本节点','🇸🇬新加坡节点']
 
+{% if customParams.adBlock.filter | default(false) %}
+# 去广告（域名级）。anti-AD 是中文区命中率最高的广告域名表，每天更新，由 mihomo 自己拉取。
+# 注意：Clash / mihomo 没有 MITM 能力，**做不了 App 开屏广告拦截**——开屏广告的接口挂在 App 自己
+# 的主域名上，只能靠解密 HTTPS 后精确改写那几个 URL。那部分只在 QuantumultX.conf 里。
+rule-providers:
+  anti-ad:
+    type: http
+    behavior: domain
+    format: yaml
+    url: https://anti-ad.net/clash.yaml
+    path: ./ruleset/anti-ad.yaml
+    interval: 86400
+
+{% endif %}
 rules:
 - DOMAIN-SUFFIX,local,DIRECT
+{% if customParams.adBlock.filter | default(false) %}
+- RULE-SET,anti-ad,📢广告链接
+{% endif %}
 # 微信 / 腾讯 - 显式直连，避免 TUN + 代理双开时 CDN anycast 路由抖动
 - DOMAIN-SUFFIX,qpic.cn,DIRECT
 - DOMAIN-SUFFIX,weixin.qq.com,DIRECT

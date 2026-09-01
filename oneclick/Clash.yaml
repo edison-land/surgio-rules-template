@@ -1,0 +1,255 @@
+# ============================================================
+#  Clash / mihomo 一键配置：分流 + 域名级去广告
+#
+#  不需要 Node.js，不需要 clone 仓库，不需要跑任何命令。
+#
+#  用法：
+#    1. 复制这个文件；
+#    2. 把下面 proxy-providers 里那一行 url 换成【你自己机场的订阅链接】；
+#       —— 整份配置你只需要改这一处；
+#    3. 导入客户端（Mihomo Party / Clash Verge Rev / FlClash / Stash）。
+#
+#  节点从哪来：客户端自己去拉你机场的订阅，本文件不含任何节点。
+#  策略组怎么自动分区：靠 filter 正则按节点名匹配，不写死节点名，
+#                      换机场、机场加减节点都不用改这份配置。
+#  规则怎么更新：都是 rule-providers 远程订阅，客户端每天自动拉最新。
+#
+#  ⚠️ 这份【没有】App 开屏广告拦截，只有域名级去广告。
+#     Clash / mihomo 内核没有 MITM 能力，做不了开屏广告改写——这是客户端限制。
+#     要拦开屏广告得用 QuantumultX，见同目录的 QuantumultX.conf。
+#
+#  ⚠️ 需要 mihomo 内核 ≥ 1.19（机场的 anytls / hysteria2 等新协议要靠它）。
+#     客户端报 `unsupport proxy type: anytls` 就是内核太旧，去客户端设置里更新内核。
+# ============================================================
+
+mixed-port: 7890
+allow-lan: false
+mode: rule
+log-level: info
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+external-controller: 127.0.0.1:9090
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - '*.lan'
+    - '*.local'
+    - 'localhost.ptlogin2.qq.com'
+  nameserver:
+    - https://223.5.5.5/dns-query
+    - https://223.6.6.6/dns-query
+
+# ------------------------------------------------------------
+#  ↓↓↓ 唯一需要你修改的地方：换成你自己机场的订阅链接 ↓↓↓
+# ------------------------------------------------------------
+proxy-providers:
+  airport:
+    type: http
+    url: "https://把这里替换成你自己机场的订阅链接"
+    interval: 86400
+    path: ./providers/airport.yaml
+    health-check:
+      enable: true
+      url: http://cp.cloudflare.com/generate_204
+      interval: 300
+
+proxy-groups:
+  # 地区分组：按节点名字自动归类。若某个组显示为空 / COMPATIBLE，见文件末尾「常见问题」。
+  - name: 🇭🇰香港节点
+    type: url-test
+    use: [airport]
+    filter: "(?i)(香港|港|HK|Hong ?Kong|🇭🇰)"
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+  - name: 🇺🇸美国节点
+    type: url-test
+    use: [airport]
+    filter: "(?i)(美国|美|US|United ?States|🇺🇸)"
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+  - name: 🇹🇼台湾节点
+    type: url-test
+    use: [airport]
+    filter: "(?i)(台湾|台灣|台|TW|Taiwan|🇹🇼)"
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+  - name: 🇯🇵日本节点
+    type: url-test
+    use: [airport]
+    filter: "(?i)(日本|日|JP|Japan|东京|大阪|🇯🇵)"
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+  - name: 🇸🇬新加坡节点
+    type: url-test
+    use: [airport]
+    filter: "(?i)(新加坡|狮城|獅城|SG|Singapore|🇸🇬)"
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+
+  - name: ♻️自动选择
+    type: url-test
+    use: [airport]
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    tolerance: 100
+  - name: 🎈手动切换
+    type: select
+    use: [airport]
+
+  # 总开关：平时改这个组就行
+  - name: 🔰节点选择
+    type: select
+    proxies: ['♻️自动选择', '🎈手动切换', '🇭🇰香港节点', '🇺🇸美国节点', '🇹🇼台湾节点', '🇯🇵日本节点', '🇸🇬新加坡节点', 'DIRECT']
+
+  # 分场景策略组
+  - name: 🇨🇳大陆网站
+    type: select
+    proxies: ['DIRECT', '🔰节点选择']
+  - name: 📢广告链接
+    type: select
+    proxies: ['REJECT', 'DIRECT']
+  - name: 🤖AIPlatforms
+    type: select
+    proxies: ['🇺🇸美国节点', '🇹🇼台湾节点', '🇯🇵日本节点', '🇸🇬新加坡节点', '🔰节点选择']
+  - name: 👨‍🔬学术网站
+    type: select
+    proxies: ['🔰节点选择', '🇭🇰香港节点', '🇺🇸美国节点', '🇯🇵日本节点', 'DIRECT']
+  - name: 🟦Microsoft服务
+    type: select
+    proxies: ['DIRECT', '🔰节点选择', '🇭🇰香港节点', '🇺🇸美国节点', '🇯🇵日本节点']
+  - name: 📺YouTube视频
+    type: select
+    proxies: ['🔰节点选择', '🇭🇰香港节点', '🇺🇸美国节点', '🇹🇼台湾节点', '🇯🇵日本节点', '🇸🇬新加坡节点']
+  - name: 🍎Apple服务
+    type: select
+    proxies: ['DIRECT', '🔰节点选择', '🇭🇰香港节点', '🇺🇸美国节点', '🇯🇵日本节点']
+  - name: 🐟无匹配规则
+    type: select
+    proxies: ['🔰节点选择', 'DIRECT', 'REJECT']
+
+rule-providers:
+  anti-ad:
+    type: http
+    behavior: domain
+    format: yaml
+    url: https://anti-ad.net/clash.yaml
+    path: ./ruleset/anti-ad.yaml
+    interval: 86400
+  openai:
+    type: http
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.yaml
+    path: ./ruleset/openai.yaml
+    interval: 86400
+  claude:
+    type: http
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.yaml
+    path: ./ruleset/claude.yaml
+    interval: 86400
+  gemini:
+    type: http
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Gemini/Gemini.yaml
+    path: ./ruleset/gemini.yaml
+    interval: 86400
+  youtube:
+    type: http
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTube/YouTube.yaml
+    path: ./ruleset/youtube.yaml
+    interval: 86400
+  scholar:
+    type: http
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GlobalScholar/GlobalScholar.yaml
+    path: ./ruleset/scholar.yaml
+    interval: 86400
+  docker:
+    type: http
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Docker/Docker.yaml
+    path: ./ruleset/docker.yaml
+    interval: 86400
+  microsoft:
+    type: http
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.yaml
+    path: ./ruleset/microsoft.yaml
+    interval: 86400
+  apple:
+    type: http
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple_Domain.yaml
+    path: ./ruleset/apple.yaml
+    interval: 86400
+  china-domain:
+    type: http
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/China/China_Domain.yaml
+    path: ./ruleset/china-domain.yaml
+    interval: 86400
+  china-ip:
+    type: http
+    behavior: ipcidr
+    format: yaml
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaIPs/ChinaIPs_IP.yaml
+    path: ./ruleset/china-ip.yaml
+    interval: 86400
+
+rules:
+  - DOMAIN-SUFFIX,local,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,100.64.0.0/10,DIRECT,no-resolve
+  # 去广告（域名级）
+  - RULE-SET,anti-ad,📢广告链接
+  # 分流
+  - RULE-SET,openai,🤖AIPlatforms
+  - RULE-SET,claude,🤖AIPlatforms
+  - RULE-SET,gemini,🤖AIPlatforms
+  - RULE-SET,youtube,📺YouTube视频
+  - RULE-SET,scholar,👨‍🔬学术网站
+  - RULE-SET,docker,👨‍🔬学术网站
+  - RULE-SET,microsoft,🟦Microsoft服务
+  - RULE-SET,apple,🍎Apple服务
+  # 国内直连（放最后，避免抢在上面的规则前面命中）
+  - RULE-SET,china-domain,🇨🇳大陆网站
+  - RULE-SET,china-ip,🇨🇳大陆网站,no-resolve
+  - GEOIP,CN,🇨🇳大陆网站
+  - MATCH,🐟无匹配规则
+
+# ============================================================
+#  常见问题
+#
+#  Q: 地区分组是空的，或者只显示一个 COMPATIBLE？
+#  A: 说明该组的 filter 没匹配到任何节点。两个原因：
+#     1) 订阅还没拉下来 —— 客户端里手动更新一次 proxy-provider 再看；
+#     2) 你机场的节点命名方式没被 filter 覆盖（比如用的是 "HongKong" 连写、
+#        或者纯英文缩写、或者带别的前缀）。
+#        解决：把上面对应分组的 filter 正则改成能匹配你节点名的写法。
+#        （这也是本文件唯一可能需要你动第二处的地方。）
+#
+#  Q: 报 `unsupport proxy type: anytls`？
+#  A: mihomo 内核太旧，去客户端设置里把内核更新到 ≥ 1.19，或更新客户端本体。
+#
+#  Q: 想要 App 开屏广告拦截？
+#  A: 这份做不到，Clash / mihomo 内核没有 MITM 能力。用 QuantumultX + 同目录的
+#     QuantumultX.conf，那份带开屏广告拦截。
+# ============================================================

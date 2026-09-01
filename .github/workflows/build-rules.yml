@@ -1,0 +1,49 @@
+name: Build rules
+
+# 每天重建 rules/ 下的规则文件并提交回仓库。
+#
+# 这些文件【不含任何节点、订阅、账号信息】，纯粹是从上游规则合并而来、
+# 把策略写死成 QX 内置 direct / proxy / reject 的分流与去广告规则，
+# 所以可以公开托管，别人直接引用 raw 链接即可，不需要 fork 也不需要装任何东西。
+#
+# 与 generate.yml 的区别：那个产出的是含真实节点的私有构件，绝不能公开；
+# 这个产出的是纯规则，本来就该公开。
+
+on:
+  workflow_dispatch: {} # 手动触发
+  schedule:
+    - cron: '30 20 * * *' # 每天 UTC 20:30 = 北京时间 04:30，错开 generate.yml
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build-rules.mjs' # 改了构建脚本就立刻重建一次
+      - '.github/workflows/build-rules.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # GitHub Actions 的网络能直连 raw.githubusercontent.com，不需要本地那套 DNS 兜底
+      - name: Build rules
+        run: node scripts/build-rules.mjs
+
+      - name: Commit if changed
+        run: |
+          if [ -z "$(git status --porcelain rules/)" ]; then
+            echo "规则无变化，跳过提交。"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add rules/
+          git commit -m "chore(rules): 每日重建分流与去广告规则"
+          git push

@@ -90,6 +90,59 @@ module.exports = {
     // 强制直连的 IP（自建服务器等）
     // directIPs: ['1.2.3.4'],
     directIPs: [],
+
+    /**
+     * 去广告 / App 开屏广告拦截。详见 README「去广告与开屏广告拦截」。
+     *
+     * 两层，作用完全不同：
+     *  - filter（域名级）：把广告 SDK 的域名整个拒掉。Clash 和 QuantumultX 都支持，零风险，不用装证书。
+     *    但它拦不掉开屏广告——开屏广告的接口通常挂在 App 自己的主域名上，整域拒掉 App 就废了。
+     *  - splash（改写级）：只拦截「下发开屏广告」的那几个 URL，把响应换成空 JSON。
+     *    这需要解密 HTTPS（MITM），所以**只有 QuantumultX 能做，且必须安装并信任 QX 的 CA 证书**。
+     *    mihomo / Clash 没有 MITM 能力，Clash.yaml 里做不了这件事。
+     *
+     * 规则本身不由本仓库维护：下面的开关只决定往配置里写哪几行远程订阅，
+     * 规则内容由 QuantumultX 自己按 update-interval 每天从上游拉取更新。
+     */
+    adBlock: {
+      // 域名级去广告（Clash + QuantumultX 都生效）
+      filter: true,
+      // 开屏广告改写（仅 QuantumultX；需要 MITM + 信任证书）
+      splash: true,
+      // App 净化合集：去掉一些冗余模块/浮窗。上游作者标注「遇到异常时关闭」，故默认关
+      cleanup: false,
+      // blackmatrix7 的改写规则，和上面的开屏规则有重叠，需要更大覆盖面时再打开
+      extraSplash: false,
+      // 脚本类改写。**能补上 B站开屏**（主力规则集没覆盖 B站），代价见 template/quantumultx.tpl 里的说明。默认关
+      scriptSplash: false,
+      /**
+       * MITM 排除名单：这些域名永远不解密。
+       * 银行 / 支付 / 券商类 App 普遍做了证书固定（SSL Pinning），一旦被解密会直接登录失败或打不开，
+       * 所以默认全部排除——代价是这些 App 的广告也拦不掉。
+       * 想拿回某个 App 的去广告，就把对应行删掉；反过来，遇到某个 App 开了 MITM 就崩，
+       * 把它的域名加进来即可（不用写 `-`，模板会自动加）。
+       */
+      mitmExclude: [
+        // 支付 / 银联
+        '*.alipay.com',
+        '*.alipayobjects.com',
+        '*.tenpay.com',
+        '*.unionpay.com',
+        '*.95516.com',
+        // 银行（按需增删）
+        '*.icbc.com.cn',
+        '*.ccb.com',
+        '*.abchina.com',
+        '*.boc.cn',
+        '*.bankcomm.com',
+        '*.cmbchina.com',
+        '*.psbc.com',
+        // Apple / 系统服务
+        '*.apple.com',
+        '*.icloud.com',
+        '*.mzstatic.com',
+      ],
+    },
   },
 
   /**
