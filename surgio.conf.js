@@ -3,10 +3,19 @@
 // 读取 .env 里的订阅链接等环境变量（见 .env.example）
 require('dotenv').config();
 
-if (!process.env.AIRPORT_SUBSCRIPTION_URL) {
+/**
+ * 两种节点来源，都是可选的，按 .env 里填了什么来决定生成哪些产物：
+ *  - 机场订阅（AIRPORT_SUBSCRIPTION_URL）→ dist/Clash.yaml、dist/QuantumultX.conf
+ *  - 自建 Trojan（TROJAN_HOST + TROJAN_PASSWORD）→ dist/Clash-Tr.yaml、dist/QuantumultX-Tr.conf
+ * 两个都填就两套都生成。密码 / 订阅链接只写在 .env 里，.env 已被 .gitignore 忽略。
+ */
+const hasAirport = !!process.env.AIRPORT_SUBSCRIPTION_URL;
+const hasTrojan = !!(process.env.TROJAN_HOST && process.env.TROJAN_PASSWORD);
+
+if (!hasAirport && !hasTrojan) {
   throw new Error(
-    '\n[surgio] 还没有填订阅链接。请把 .env.example 复制成 .env，' +
-      '并在里面填上你的机场订阅链接 AIRPORT_SUBSCRIPTION_URL。\n',
+    '\n[surgio] 还没有配置节点来源。请把 .env.example 复制成 .env，' +
+      '填上机场订阅 AIRPORT_SUBSCRIPTION_URL，或自建节点的 TROJAN_HOST / TROJAN_PASSWORD。\n',
   );
 }
 
@@ -27,8 +36,12 @@ module.exports = {
    */
   remoteSnippets: [
     {
+      // 必须用 Clash 目录下的 China.list：Surge 目录的 China_Domain.list 是 DOMAIN-SET 格式
+      // （每行只有 `.qq.com` 这样的裸域名），Surgio 的 clash/quantumultx 过滤器只认
+      // `DOMAIN-SUFFIX,xxx` 这类带类型前缀的行，裸域名会被**静默丢弃**——结果就是配置里
+      // 一条国内域名规则都没有，微信视频号 / 腾讯 CDN 之类的域名只能靠 GEOIP 兜底，很容易走代理。
       name: 'china',
-      url: 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/China/China_Domain.list',
+      url: 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/China/China.list',
     },
     {
       name: 'china_ip',
@@ -150,16 +163,35 @@ module.exports = {
    * name 是 dist/ 里的文件名，template 对应 template/ 里的模板，provider 对应 provider/ 里的文件名。
    */
   artifacts: [
-    {
-      name: 'Clash.yaml',
-      template: 'clash',
-      provider: 'airport',
-    },
-    {
-      name: 'QuantumultX.conf',
-      template: 'quantumultx',
-      provider: 'airport',
-    },
+    ...(hasAirport
+      ? [
+          {
+            name: 'Clash.yaml',
+            template: 'clash',
+            provider: 'airport',
+          },
+          {
+            name: 'QuantumultX.conf',
+            template: 'quantumultx',
+            provider: 'airport',
+          },
+        ]
+      : []),
+    // 自建 Trojan VPS。模板里没有按地区分的策略组，其余（分流、去广告）与上面完全一致。
+    ...(hasTrojan
+      ? [
+          {
+            name: 'Clash-Tr.yaml',
+            template: 'clash-tr',
+            provider: 'trojan-vps',
+          },
+          {
+            name: 'QuantumultX-Tr.conf',
+            template: 'quantumultx-tr',
+            provider: 'trojan-vps',
+          },
+        ]
+      : []),
   ],
 
   /**

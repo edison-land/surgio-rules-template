@@ -52,7 +52,7 @@
 
 ### 规则从哪来、怎么更新
 
-`rules/` 下的文件由 [`scripts/build-rules.mjs`](./scripts/build-rules.mjs) 从上游合并生成，
+`rules/` 下的文件由 [`scripts/build-rules.js`](./scripts/build-rules.js) 从上游合并生成，
 **GitHub Actions 每天自动重建**（[build-rules.yml](./.github/workflows/build-rules.yml)），
 你什么都不用做。合并这一步做的事是把上游各自的分组名统一改写成 QX 内置策略，
 省掉「添加时要手动选策略」这一步。
@@ -62,7 +62,7 @@
 | `rules/routing.list` | ~27,000 | blackmatrix7（OpenAI / Claude / Gemini / YouTube / 学术 / Docker / 大陆域名 / 大陆 IP） |
 | `rules/adblock.list` | ~41,000 | fmz200 + blackmatrix7 |
 
-想自己改（比如把 YouTube 也改成直连）：编辑 `scripts/build-rules.mjs` 里的 `TARGETS`，
+想自己改（比如把 YouTube 也改成直连）：编辑 `scripts/build-rules.js` 里的 `TARGETS`，
 跑 `npm run build:rules` 重新生成。这一步需要 Node.js，但**只有想改规则的人才需要**。
 
 ### 🅱 换整份配置（想要 🇭🇰🇺🇸 地区分组时）
@@ -127,6 +127,29 @@ npm run generate
 - **Clash 系（mihomo 内核，推荐）**：Mihomo Party / Clash Verge Rev / FlClash → Profiles → 导入 `Clash.yaml`。
 - **QuantumultX**：设置 → 配置 → 从 URL 引用，填 `QuantumultX.conf` 的地址。
 - **Shadowrocket**：见下方「关于节点协议」。
+
+---
+
+## 自建节点（可选，与机场并存）
+
+除了机场订阅，还可以把自己 VPS 上的 Trojan 节点也做成一份配置。在 `.env` 里填：
+
+```dotenv
+TROJAN_HOST=your-vps.example.com
+TROJAN_PORT=443
+TROJAN_PASSWORD=你的密码
+TROJAN_SNI=          # 不填就用 TROJAN_HOST
+TROJAN_NODE_NAME=    # 不填就是 US Trojan VPS
+```
+
+再 `npm run generate`，`dist/` 里会多出 `Clash-Tr.yaml` 与 `QuantumultX-Tr.conf`。
+
+- 两组变量互相独立：只填机场就只生成机场配置，只填 Trojan 就只生成自建配置，都填就四份都生成。
+- **自建版走白名单模式**：国内域名 / 国内 IP / 微信视频号 → 直连，其余全部走 `🚀代理`。只有一个策略组，不按服务分流、不接去广告——自建通常只有一两个节点，没有「这个服务用哪个地区」的选择题。要按服务分流和去广告，用机场版那两份。
+- 微信 / 视频号的直连域名两边共用（`template/_wechat-direct-clash.tpl`、`_wechat-direct-quantumultx.tpl`），改一处四份配置同时生效。
+- 想换成别的协议（hysteria2 / vmess / ss…），改 `provider/trojan-vps.js` 里的 `nodeList` 即可，字段见 [Surgio 自定义 Provider 文档](https://surgio.js.org/guide/custom-provider.html)。
+
+> **密码只写在 `.env` 里。** `.env` 已被 `.gitignore` 忽略。不要把密码写进 `generate.sh`、`surgio.conf.js` 或任何被 git 跟踪的文件——一旦 commit 并 push，改历史也救不回来，只能去服务端换密码。
 
 ---
 
@@ -236,20 +259,12 @@ customParams: {
 
 ---
 
-## 用 GitHub Actions 自动生成（可选）
-
-1. Fork 本仓库；
-2. Settings → Secrets and variables → Actions 新建 `AIRPORT_SUBSCRIPTION_URL`；
-3. Actions 页跑 `Generate configs`，在 Artifacts 里下载 `dist`。
-
-> 该流程只产**私有构件**，不公开发布。
-
----
-
 ## 安全须知
 
-- 订阅链接 = 机场密码：只放 `.env` / GitHub Secret，别提交别截图。
+- 订阅链接 = 机场密码，自建节点密码同理：只放 `.env` / GitHub Secret，别提交别截图。
+- 别把密码写进脚本里当环境变量传（`FOO=密码 npx surgio generate`）——这种写法最容易被 `git add` 顺手带进历史。
 - `dist/` 里的配置含真实节点，等同你的账号，已默认 gitignore；分享给别人请分享**本模板**而不是生成好的配置。
+- 公开仓库里别用 CI 生成配置：公开仓库的 Actions Artifact 是所有人可下载的，等于把节点公开。
 
 ## 致谢 & License
 

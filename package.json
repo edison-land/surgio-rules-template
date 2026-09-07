@@ -5,9 +5,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "generate": "NODE_OPTIONS=\"--require ./dns-fix.js\" surgio generate",
-    "generate:nofix": "surgio generate",
-    "build:rules": "NODE_OPTIONS=\"--require ./dns-fix.js\" node scripts/build-rules.mjs"
+    "generate": "NODE_OPTIONS=\"--require ./dns-fix.js\" SURGIO_NETWORK_TIMEOUT=30000 SURGIO_NETWORK_RETRY=2 surgio generate",
+    "generate:nofix": "SURGIO_NETWORK_TIMEOUT=30000 SURGIO_NETWORK_RETRY=2 surgio generate",
+    "build:rules": "NODE_OPTIONS=\"--require ./dns-fix.js\" node scripts/build-rules.js"
   },
   "engines": {
     "node": ">=18"
