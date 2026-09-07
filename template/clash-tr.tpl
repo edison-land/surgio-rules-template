@@ -2,9 +2,9 @@
 #
 # 自建节点版（白名单模式）。
 #   国内域名 / 国内 IP / 微信 → 直连，其余全部走 🚀代理。
-#   不按服务分策略组，也不接去广告规则——自建节点通常只有一两个，
-#   没有「这个服务该用哪个地区的节点」这种选择题。
-#   要按服务分流、要去广告，用机场版的 Clash.yaml。
+#   不按服务分策略组——自建节点通常只有一两个，没有「这个服务该用哪个地区」这种选择题。
+#   域名级去广告跟机场版一样有（开关同为 customParams.adBlock.filter）；
+#   开屏广告拦截需要 MITM，只有 QuantumultX 能做，见 QuantumultX-Tr.conf 的说明。
 
 external-controller: 127.0.0.1:9090
 port: 7890
@@ -35,11 +35,34 @@ proxy-groups:
   # 节点在前，DIRECT 垫底：默认就是走节点（select 组取第一项为默认值），
   # 需要临时全局直连时在客户端里切一下即可。
   proxies: {{ getClashNodeNames(nodeList).concat(['DIRECT']) | json }}
+{% if customParams.adBlock.filter | default(false) %}
+- name: 📢广告链接
+  type: select
+  # 拦截在前 = 默认真的拦。误伤了就在客户端里把这个组切成 DIRECT 放行。
+  proxies: ['REJECT','DIRECT']
+{% endif %}
 
+{% if customParams.adBlock.filter | default(false) %}
+# 去广告（域名级）。anti-AD 每天更新，由 mihomo 自己拉取。
+# mihomo 没有 MITM 能力，做不了 App 开屏广告拦截——那部分只在 QuantumultX-Tr.conf 里。
+rule-providers:
+  anti-ad:
+    type: http
+    behavior: domain
+    format: yaml
+    url: https://anti-ad.net/clash.yaml
+    path: ./ruleset/anti-ad.yaml
+    interval: 86400
+
+{% endif %}
 rules:
 - DOMAIN-SUFFIX,local,DIRECT
 {% include "_wechat-direct-clash.tpl" %}
-# 视频号的视频流：finder*.video.qq.com
+{% if customParams.adBlock.filter | default(false) %}
+- RULE-SET,anti-ad,📢广告链接
+{% endif %}
+# 视频号的视频流：finder*.video.qq.com。放在 anti-ad 之后，
+# 这样腾讯视频自己的广告域名（adss.video.qq.com 等）仍然会被广告规则命中。
 - DOMAIN-SUFFIX,video.qq.com,DIRECT
 {% if customParams.proxySuffixes %}
 {% for suffix in customParams.proxySuffixes %}

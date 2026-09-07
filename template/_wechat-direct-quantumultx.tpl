@@ -1,9 +1,10 @@
 {#
   微信 / 视频号必须直连的域名。quantumultx.tpl 与 quantumultx-tr.tpl 共用。
-  QX 的本地规则优先于 [filter_remote]，所以这里可以直接包含 video.qq.com。
+  QX 官方 sample.conf 没有写明 filter_local 与 filter_remote 的优先级，所以这里不依赖顺序：
+  实际核对过两个远程广告表，它们只拦 wxsnsdythumb.wxs.qq.com（朋友圈广告缩略图）和
+  gu/py/py2.qlogo.cn，没有整域拦 wxs.qq.com —— 整域拦截只出现在 Clash 用的 anti-ad 里。
 #}
-# 微信 / 视频号 - 显式直连。上游广告表里有 wxs.qq.com 这类整域拦截，
-# 而它正是视频号与朋友圈的图片、视频 CDN，被拦掉就只会转圈。
+# 微信 / 视频号 - 显式直连。
 DOMAIN-SUFFIX,weixin.qq.com,DIRECT
 DOMAIN-SUFFIX,wx.qq.com,DIRECT
 DOMAIN-SUFFIX,wechat.com,DIRECT

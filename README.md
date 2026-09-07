@@ -145,7 +145,7 @@ TROJAN_NODE_NAME=    # 不填就是 US Trojan VPS
 再 `npm run generate`，`dist/` 里会多出 `Clash-Tr.yaml` 与 `QuantumultX-Tr.conf`。
 
 - 两组变量互相独立：只填机场就只生成机场配置，只填 Trojan 就只生成自建配置，都填就四份都生成。
-- **自建版走白名单模式**：国内域名 / 国内 IP / 微信视频号 → 直连，其余全部走 `🚀代理`。只有一个策略组，不按服务分流、不接去广告——自建通常只有一两个节点，没有「这个服务用哪个地区」的选择题。要按服务分流和去广告，用机场版那两份。
+- **自建版走白名单模式**：国内域名 / 国内 IP / 微信视频号 → 直连，其余全部走 `🚀代理`。不按服务分流——自建通常只有一两个节点，没有「这个服务用哪个地区」的选择题。去广告（域名级 + QX 的开屏改写）跟机场版一样有，共用 `customParams.adBlock` 的开关。
 - 微信 / 视频号的直连域名两边共用（`template/_wechat-direct-clash.tpl`、`_wechat-direct-quantumultx.tpl`），改一处四份配置同时生效。
 - 想换成别的协议（hysteria2 / vmess / ss…），改 `provider/trojan-vps.js` 里的 `nodeList` 即可，字段见 [Surgio 自定义 Provider 文档](https://surgio.js.org/guide/custom-provider.html)。
 
@@ -199,6 +199,14 @@ Clash / mihomo 没有 MITM 能力，所以 `Clash.yaml` 里**只有域名级**�
    不重装的话你看到的还是昨天下发的那张广告图。
 
 规则内容由 QuantumultX 自己每天从上游拉取更新（`update-interval=86400`），改了规则不需要重新 `npm run generate`。
+
+### 误伤了怎么临时放行
+
+被 `📢广告链接` 命中的域名默认是**拦截**。某个网站/App 打不开又怀疑是广告规则误伤时，
+不用改配置重新生成——在客户端里把 `📢广告链接` 这个策略组切成直连（Clash 选 `🎯全球直连`，
+QX 选 `direct`）就能立刻放行，确认完再切回去。
+
+注意这只对 blackmatrix7 那份表有效：奶思那份的规则行自带 `reject` 策略，按 QX 的规则不能被 `force-policy` 覆盖。
 
 ### 开关
 

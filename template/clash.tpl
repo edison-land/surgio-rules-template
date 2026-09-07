@@ -66,7 +66,9 @@ proxy-groups:
   proxies: ['🎯全球直连']
 - name: 📢广告链接
   type: select
-  proxies: ['🎯全球直连','🛑全球拦截']
+  # 拦截在前：Clash 的 select 组默认取第一项，写反了去广告就是空转。与 QX 侧保持一致。
+  # 误伤某个站点时在客户端里把这个组切成 🎯全球直连 即可临时放行。
+  proxies: ['🛑全球拦截','🎯全球直连']
 - name: 🤖AIPlatforms
   type: select
   proxies: ['🇺🇸美国节点','🇹🇼台湾节点','🇯🇵日本节点','🇸🇬新加坡节点','🔰节点选择']
