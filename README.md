@@ -261,9 +261,24 @@ customParams: {
 
 ## 生成失败排查
 
-**拉远程规则失败**（`raw.githubusercontent.com` 证书/超时）：`npm run generate` 默认已带 DNS 兜底。仍失败就开代理跑 `npm run generate:nofix`，或把 `remoteSnippets` 换成 jsDelivr 镜像 `https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/...`。
+**拉远程规则失败**——报 `Client network socket disconnected before secure TLS connection was established`
+或证书/超时错误。分流规则来自 `raw.githubusercontent.com`，这个域名在国内经常被 RST。
 
-**订阅 403 Forbidden**：机场拒绝拉订阅。① 拉太频繁被限流，等一会再试（别频繁重跑）；② 到机场后台刷新订阅链接并更新 `.env`；③ UA 被拦——`provider/airport.js` 已默认带客户端 UA，可换成 `'clash'` / `'mihomo'`。
+`npm run generate` 会自动处理：探测本机 **7890 / 7897 / 1087** 端口，发现本地代理就让 Node 走它
+（Node 24.5+ 的 `NODE_USE_ENV_PROXY`），没有就退回 `dns-fix.js` 把域名钉到可用的 Fastly IP。
+所以**最省事的办法就是把你的代理客户端打开再跑**。
+
+> 光开客户端的「系统代理」不够：macOS 的系统代理只对 GUI 应用生效，命令行里的 Node 不读它。
+> 本脚本是直接探测端口再显式传给 Node 的，所以客户端开着就行，不用手动设环境变量。
+
+- 代理端口不在上面三个之列：`LOCAL_PROXY=http://127.0.0.1:1080 npm run generate`
+- 就是不想走代理：`npm run generate:nofix`（只用 DNS 兜底，能不能成看当时网络）
+- 都不行：把 `surgio.conf.js` 里的 `remoteSnippets` 换成 jsDelivr 镜像
+  `https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/...`
+
+失败重跑没有代价：已经下载成功的规则片段会缓存 12 小时，重跑只补没拿到的那几个。
+
+**订阅 403 Forbidden**：机场拒绝拉订阅，**响应体里通常直接写了原因**，别靠猜。① 拉太频繁被限流，等几分钟再试（连着重跑最容易触发，而且有些机场会把限流写成「token 过期」）；② 到机场后台重新授权 / 刷新订阅链接并更新 `.env`；③ UA 被拦——`provider/airport.js` 已默认带客户端 UA，可换成 `'clash'` / `'mihomo'`。
 
 ---
 
