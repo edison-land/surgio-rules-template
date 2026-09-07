@@ -8,11 +8,16 @@
  *
  * 产物只含规则，不含任何节点、订阅、账号信息，可以公开托管、随便转发。
  *
- * 用法：node scripts/build-rules.mjs
+ * 用法：node scripts/build-rules.js
  * 自动更新：见 .github/workflows/build-rules.yml（每天重建一次）
+ *
+ * 注意：必须是 CommonJS。`surgio generate` 会用 sourceType: 'commonjs' 对全项目做
+ * JS 语法检查（node_modules 之外的 .js/.mjs 都会被扫），ESM 的 import/export 会直接报错。
  */
 
-import { writeFile, mkdir } from 'node:fs/promises';
+'use strict';
+
+const { writeFile, mkdir } = require('node:fs/promises');
 
 const BM = 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX';
 const FMZ = 'https://raw.githubusercontent.com/fmz200/wool_scripts/main/QuantumultX';
@@ -135,7 +140,14 @@ async function build(filename, spec) {
   return total;
 }
 
-for (const [filename, spec] of Object.entries(TARGETS)) {
-  console.log(`构建 rules/${filename} …`);
-  await build(filename, spec);
+async function main() {
+  for (const [filename, spec] of Object.entries(TARGETS)) {
+    console.log(`构建 rules/${filename} …`);
+    await build(filename, spec);
+  }
 }
+
+main().catch((err) => {
+  console.error(err.message);
+  process.exit(1);
+});

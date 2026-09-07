@@ -16,7 +16,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'scripts/build-rules.mjs' # 改了构建脚本就立刻重建一次
+      - 'scripts/build-rules.js' # 改了构建脚本就立刻重建一次
       - '.github/workflows/build-rules.yml'
 
 permissions:
@@ -34,7 +34,7 @@ jobs:
 
       # GitHub Actions 的网络能直连 raw.githubusercontent.com，不需要本地那套 DNS 兜底
       - name: Build rules
-        run: node scripts/build-rules.mjs
+        run: node scripts/build-rules.js
 
       - name: Commit if changed
         run: |
