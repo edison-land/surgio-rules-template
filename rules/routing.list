@@ -3,8 +3,8 @@
 #
 # 本文件由 scripts/build-rules.mjs 自动生成，请勿手工编辑。
 # 规则来自 blackmatrix7/ios_rule_script 与 fmz200/wool_scripts，版权归原作者。
-# 生成时间：2026-09-08 22:49:41 UTC
-# 规则总数：27370
+# 生成时间：2026-09-09 22:39:46 UTC
+# 规则总数：27371
 #
 # 用法：QuantumultX → 设置 → 过滤器 → 添加远程过滤器 → 粘贴本文件的 URL。
 #       策略已写死在每一行里，添加时【不要】设置策略偏好。
@@ -4266,7 +4266,7 @@ ip6-cidr, 2a0b:b581::/48, direct
 ip6-cidr, 2a0b:b582::/48, direct
 ip6-cidr, 2a0b:b583::/48, direct
 
-# ---------- 大陆 IP (23128 条 → direct) ----------
+# ---------- 大陆 IP (23129 条 → direct) ----------
 ip-cidr, 1.0.1.0/24, direct
 ip-cidr, 1.0.2.0/23, direct
 ip-cidr, 1.0.32.0/19, direct
@@ -10409,6 +10409,7 @@ ip-cidr, 113.96.83.0/24, direct
 ip-cidr, 113.96.98.0/24, direct
 ip-cidr, 114.104.0.0/14, direct
 ip-cidr, 114.110.0.0/20, direct
+ip-cidr, 114.110.112.0/22, direct
 ip-cidr, 114.110.64.0/18, direct
 ip-cidr, 114.110.96.0/22, direct
 ip-cidr, 114.111.0.0/19, direct
@@ -18373,7 +18374,7 @@ ip-cidr, 222.126.178.0/23, direct
 ip-cidr, 222.126.180.0/22, direct
 ip-cidr, 222.126.184.0/21, direct
 ip-cidr, 222.126.184.0/22, direct
-ip-cidr, 222.126.188.0/23, direct
+ip-cidr, 222.126.188.0/24, direct
 ip-cidr, 222.126.192.0/21, direct
 ip-cidr, 222.126.192.0/22, direct
 ip-cidr, 222.126.196.0/23, direct
