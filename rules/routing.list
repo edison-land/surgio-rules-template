@@ -3,8 +3,8 @@
 #
 # 本文件由 scripts/build-rules.mjs 自动生成，请勿手工编辑。
 # 规则来自 blackmatrix7/ios_rule_script 与 fmz200/wool_scripts，版权归原作者。
-# 生成时间：2026-10-06 23:55:30 UTC
-# 规则总数：23500
+# 生成时间：2026-10-08 00:17:42 UTC
+# 规则总数：23499
 #
 # 用法：QuantumultX → 设置 → 过滤器 → 添加远程过滤器 → 粘贴本文件的 URL。
 #       策略已写死在每一行里，添加时【不要】设置策略偏好。
@@ -4266,7 +4266,7 @@ ip6-cidr, 2a0b:b581::/48, direct
 ip6-cidr, 2a0b:b582::/48, direct
 ip6-cidr, 2a0b:b583::/48, direct
 
-# ---------- 大陆 IP (19258 条 → direct) ----------
+# ---------- 大陆 IP (19257 条 → direct) ----------
 ip-cidr, 1.0.1.0/24, direct
 ip-cidr, 1.0.2.0/23, direct
 ip-cidr, 1.0.32.0/19, direct
@@ -5291,7 +5291,6 @@ ip-cidr, 103.144.136.0/23, direct
 ip-cidr, 103.144.148.0/23, direct
 ip-cidr, 103.144.158.0/23, direct
 ip-cidr, 103.144.240.0/23, direct
-ip-cidr, 103.144.244.0/23, direct
 ip-cidr, 103.144.40.0/23, direct
 ip-cidr, 103.144.41.0/24, direct
 ip-cidr, 103.144.52.0/23, direct
