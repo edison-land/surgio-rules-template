@@ -3,8 +3,8 @@
 #
 # 本文件由 scripts/build-rules.mjs 自动生成，请勿手工编辑。
 # 规则来自 blackmatrix7/ios_rule_script 与 fmz200/wool_scripts，版权归原作者。
-# 生成时间：2026-10-10 23:41:33 UTC
-# 规则总数：23467
+# 生成时间：2026-10-11 23:47:53 UTC
+# 规则总数：23470
 #
 # 用法：QuantumultX → 设置 → 过滤器 → 添加远程过滤器 → 粘贴本文件的 URL。
 #       策略已写死在每一行里，添加时【不要】设置策略偏好。
@@ -4266,7 +4266,7 @@ ip6-cidr, 2a0b:b581::/48, direct
 ip6-cidr, 2a0b:b582::/48, direct
 ip6-cidr, 2a0b:b583::/48, direct
 
-# ---------- 大陆 IP (19225 条 → direct) ----------
+# ---------- 大陆 IP (19228 条 → direct) ----------
 ip-cidr, 1.0.1.0/24, direct
 ip-cidr, 1.0.2.0/23, direct
 ip-cidr, 1.0.32.0/19, direct
@@ -4838,6 +4838,7 @@ ip-cidr, 103.104.104.0/22, direct
 ip-cidr, 103.104.104.0/23, direct
 ip-cidr, 103.104.106.0/24, direct
 ip-cidr, 103.104.152.0/22, direct
+ip-cidr, 103.104.155.0/24, direct
 ip-cidr, 103.104.168.0/22, direct
 ip-cidr, 103.104.188.0/22, direct
 ip-cidr, 103.104.198.0/23, direct
@@ -11108,6 +11109,7 @@ ip-cidr, 14.136.132.0/27, direct
 ip-cidr, 14.136.137.0/26, direct
 ip-cidr, 14.144.0.0/12, direct
 ip-cidr, 14.16.0.0/12, direct
+ip-cidr, 14.167.176.0/20, direct
 ip-cidr, 14.192.60.0/22, direct
 ip-cidr, 14.192.61.0/24, direct
 ip-cidr, 14.192.62.0/23, direct
@@ -17841,6 +17843,7 @@ ip-cidr, 85.184.245.0/24, direct
 ip-cidr, 85.209.40.0/22, direct
 ip-cidr, 87.232.115.0/24, direct
 ip-cidr, 87.254.207.0/24, direct
+ip-cidr, 87.82.58.0/24, direct
 ip-cidr, 89.30.124.160/30, direct
 ip-cidr, 91.233.17.0/24, direct
 ip-cidr, 91.234.36.0/24, direct
