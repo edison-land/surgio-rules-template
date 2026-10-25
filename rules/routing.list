@@ -3,8 +3,8 @@
 #
 # 本文件由 scripts/build-rules.mjs 自动生成，请勿手工编辑。
 # 规则来自 blackmatrix7/ios_rule_script 与 fmz200/wool_scripts，版权归原作者。
-# 生成时间：2026-10-24 22:36:23 UTC
-# 规则总数：23860
+# 生成时间：2026-10-25 22:42:09 UTC
+# 规则总数：23858
 #
 # 用法：QuantumultX → 设置 → 过滤器 → 添加远程过滤器 → 粘贴本文件的 URL。
 #       策略已写死在每一行里，添加时【不要】设置策略偏好。
@@ -4266,7 +4266,7 @@ ip6-cidr, 2a0b:b581::/48, direct
 ip6-cidr, 2a0b:b582::/48, direct
 ip6-cidr, 2a0b:b583::/48, direct
 
-# ---------- 大陆 IP (19618 条 → direct) ----------
+# ---------- 大陆 IP (19616 条 → direct) ----------
 ip-cidr, 1.0.1.0/24, direct
 ip-cidr, 1.0.2.0/23, direct
 ip-cidr, 1.0.32.0/19, direct
@@ -5645,6 +5645,7 @@ ip-cidr, 103.186.4.0/23, direct
 ip-cidr, 103.189.140.0/23, direct
 ip-cidr, 103.189.152.0/22, direct
 ip-cidr, 103.189.154.0/23, direct
+ip-cidr, 103.189.197.0/24, direct
 ip-cidr, 103.189.92.0/23, direct
 ip-cidr, 103.19.12.0/22, direct
 ip-cidr, 103.19.232.0/22, direct
@@ -8547,6 +8548,7 @@ ip-cidr, 112.73.0.0/19, direct
 ip-cidr, 112.73.128.0/17, direct
 ip-cidr, 112.73.222.0/24, direct
 ip-cidr, 112.73.64.0/18, direct
+ip-cidr, 112.73.96.0/19, direct
 ip-cidr, 112.74.0.0/15, direct
 ip-cidr, 112.74.0.0/16, direct
 ip-cidr, 112.8.0.0/13, direct
@@ -16623,7 +16625,6 @@ ip-cidr, 43.240.204.0/22, direct
 ip-cidr, 43.240.220.0/22, direct
 ip-cidr, 43.240.240.0/20, direct
 ip-cidr, 43.240.56.0/21, direct
-ip-cidr, 43.240.60.0/22, direct
 ip-cidr, 43.240.68.0/22, direct
 ip-cidr, 43.240.72.0/21, direct
 ip-cidr, 43.240.72.0/22, direct
@@ -16935,15 +16936,12 @@ ip-cidr, 43.96.122.0/24, direct
 ip-cidr, 43.96.124.0/23, direct
 ip-cidr, 43.96.126.0/24, direct
 ip-cidr, 43.96.128.0/17, direct
-ip-cidr, 43.96.16.130/32, direct
 ip-cidr, 43.96.18.0/24, direct
-ip-cidr, 43.96.2.130/32, direct
 ip-cidr, 43.96.20.0/22, direct
 ip-cidr, 43.96.24.0/22, direct
 ip-cidr, 43.96.3.0/24, direct
 ip-cidr, 43.96.30.0/23, direct
 ip-cidr, 43.96.32.0/22, direct
-ip-cidr, 43.96.36.130/32, direct
 ip-cidr, 43.96.37.0/24, direct
 ip-cidr, 43.96.38.0/24, direct
 ip-cidr, 43.96.4.0/22, direct
@@ -16962,7 +16960,6 @@ ip-cidr, 43.96.60.0/24, direct
 ip-cidr, 43.96.62.0/23, direct
 ip-cidr, 43.96.64.0/21, direct
 ip-cidr, 43.96.72.0/22, direct
-ip-cidr, 43.96.77.131/32, direct
 ip-cidr, 43.96.78.0/24, direct
 ip-cidr, 43.96.79.0/24, direct
 ip-cidr, 43.96.8.0/22, direct
@@ -21048,7 +21045,8 @@ ip6-cidr, 2406:840:9600::/41, direct
 ip6-cidr, 2406:840:9610::/44, direct
 ip6-cidr, 2406:840:9630::/44, direct
 ip6-cidr, 2406:840:9640::/43, direct
-ip6-cidr, 2406:840:9660::/46, direct
+ip6-cidr, 2406:840:9660::/48, direct
+ip6-cidr, 2406:840:9662::/47, direct
 ip6-cidr, 2406:840:9664::/47, direct
 ip6-cidr, 2406:840:9667::/48, direct
 ip6-cidr, 2406:840:9668::/45, direct
