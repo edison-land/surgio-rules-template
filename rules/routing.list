@@ -3,8 +3,8 @@
 #
 # 本文件由 scripts/build-rules.mjs 自动生成，请勿手工编辑。
 # 规则来自 blackmatrix7/ios_rule_script 与 fmz200/wool_scripts，版权归原作者。
-# 生成时间：2026-10-26 23:57:45 UTC
-# 规则总数：23858
+# 生成时间：2026-10-27 23:53:27 UTC
+# 规则总数：23861
 #
 # 用法：QuantumultX → 设置 → 过滤器 → 添加远程过滤器 → 粘贴本文件的 URL。
 #       策略已写死在每一行里，添加时【不要】设置策略偏好。
@@ -4266,7 +4266,7 @@ ip6-cidr, 2a0b:b581::/48, direct
 ip6-cidr, 2a0b:b582::/48, direct
 ip6-cidr, 2a0b:b583::/48, direct
 
-# ---------- 大陆 IP (19616 条 → direct) ----------
+# ---------- 大陆 IP (19619 条 → direct) ----------
 ip-cidr, 1.0.1.0/24, direct
 ip-cidr, 1.0.2.0/23, direct
 ip-cidr, 1.0.32.0/19, direct
@@ -4650,7 +4650,7 @@ ip-cidr, 101.49.212.0/24, direct
 ip-cidr, 101.50.56.0/22, direct
 ip-cidr, 101.50.8.0/21, direct
 ip-cidr, 101.52.0.0/16, direct
-ip-cidr, 101.52.112.0/21, direct
+ip-cidr, 101.52.116.0/22, direct
 ip-cidr, 101.52.124.0/22, direct
 ip-cidr, 101.52.128.0/20, direct
 ip-cidr, 101.52.204.0/22, direct
@@ -6326,6 +6326,8 @@ ip-cidr, 103.239.152.0/21, direct
 ip-cidr, 103.239.152.0/22, direct
 ip-cidr, 103.239.180.0/22, direct
 ip-cidr, 103.239.184.0/22, direct
+ip-cidr, 103.239.184.0/23, direct
+ip-cidr, 103.239.186.0/24, direct
 ip-cidr, 103.239.192.0/21, direct
 ip-cidr, 103.239.192.0/22, direct
 ip-cidr, 103.239.204.0/22, direct
@@ -8548,7 +8550,6 @@ ip-cidr, 112.73.0.0/19, direct
 ip-cidr, 112.73.128.0/17, direct
 ip-cidr, 112.73.222.0/24, direct
 ip-cidr, 112.73.64.0/18, direct
-ip-cidr, 112.73.96.0/19, direct
 ip-cidr, 112.74.0.0/15, direct
 ip-cidr, 112.74.0.0/16, direct
 ip-cidr, 112.8.0.0/13, direct
@@ -9936,6 +9937,7 @@ ip-cidr, 119.44.23.0/24, direct
 ip-cidr, 119.44.24.0/23, direct
 ip-cidr, 119.44.253.0/24, direct
 ip-cidr, 119.44.254.0/23, direct
+ip-cidr, 119.44.26.0/24, direct
 ip-cidr, 119.44.4.0/23, direct
 ip-cidr, 119.44.45.0/24, direct
 ip-cidr, 119.44.46.0/24, direct
@@ -16625,6 +16627,7 @@ ip-cidr, 43.240.204.0/22, direct
 ip-cidr, 43.240.220.0/22, direct
 ip-cidr, 43.240.240.0/20, direct
 ip-cidr, 43.240.56.0/21, direct
+ip-cidr, 43.240.60.0/22, direct
 ip-cidr, 43.240.68.0/22, direct
 ip-cidr, 43.240.72.0/21, direct
 ip-cidr, 43.240.72.0/22, direct
